@@ -1,0 +1,47 @@
+#include <Wire.h>
+#include <RTClib.h>
+
+RTC_DS1307 RTC;
+
+void setup() {
+pinMode(13,OUTPUT);  //Seleccionamos el pin de salida del relé
+Serial.begin (57600);
+Wire.begin();
+RTC.begin();
+
+   if (! RTC.begin ()) {
+     Serial.println ("No se pudo encontrar el RTC");
+   }
+
+   if (! RTC.isrunning ()) {
+     Serial.println ("¡RTC NO se está ejecutando!");
+    
+   } else {
+  
+     // siguiente línea establece el RTC a la fecha y hora en que se compiló este sketch
+     rtc.adjust (DateTime (F (__ DATE__), F (__ TIME__)));
+    
+}
+
+void loop() {
+ DateTime now = RTC.now();
+ if(now.hour() == 07 && now.minute() == 00) //A esta hora es a la que abro la puerta (07:00h)
+  {
+  digitalWrite(13,HIGH);
+  }
+ else if(now.hour() == 07 && now.minute() == 01) //El impulso dura 1 minuto
+  {
+  digitalWrite(13,LOW);
+  }
+ delay(3000);
+
+ if(now.hour() == 19 && now.minute() == 00) //A esta hora es a la que cierro la puerta (19:00h)
+  {
+  digitalWrite(13,HIGH);
+  }
+ else if(now.hour() == 19 && now.minute() == 01) //El impulso dura 1 minuto
+  {
+  digitalWrite(13,LOW);
+  }
+ delay(3000);
+}
